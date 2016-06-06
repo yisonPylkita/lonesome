@@ -1,17 +1,29 @@
+#include "game.hpp"
+#include "game_state.hpp"
 #include <iostream>
-#include <cstdlib>
-#include </usr/share/include/selene.h>
-
-#include "logger.hpp"
 
 
-int main()
+int mainImp(int argc, char *argv[]) 
 {
-    Engine::Logger::_Logger test("main.log");
-    sel::State lua;
-    lua["logger"].SetObj(test,
-                       "log", &Engine::Logger::_Logger::log);
-
-    lua.Load("script.lua");
+    Game game;
+    GameState state;
+    game.Start();
+    game.Loading();
+    state = game.Menu();
+    if (state == GameState::END)
+        game.End();
     return EXIT_SUCCESS;
+}
+
+int main(int argc, char *argv[])
+{
+    try {
+        return mainImp(argc, argv);
+    } catch (std::exception const & e) {
+        std::cout << "Unhandled exception -> " << e.what() << std::endl; 
+    } catch (...) {
+        std::cout << "Unrecognized unhandled exception" << std::endl;
+    }
+    
+    return EXIT_FAILURE;
 }
